@@ -1,0 +1,22 @@
+Contact : Julnishar, Aman
+
+
+Current Use Case : 
+
+Current Status of Mawid Integration :
+
+Current Integration Pathway ----    Cerner --> Rhapsody --> Mawid (Lean) MOD Specific - https://eatizazhealth.lean.sa/
+
+Cerner to/fro Rhapsody - HL7
+Rhapsody to/fro - FHIR R4 KSA
+
+Use Cases : 
+
+	1. Clinic Retrieval - fetch the list of facilities
+	2. Practitioners - Fetch doctor --  not working
+	3. Slot - search and block
+	4. Booking Notification
+	5. Document Upload
+	6. Appointment Update - Action - Cancel, reschedule
+	7. Notification - Action - User change / update
+
