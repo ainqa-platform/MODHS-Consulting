@@ -42,8 +42,48 @@ Rad Orders -- Completed
 Rad Reports -- Completed
 Rad Image Manifest  -- ??
 CDA document request -- ??
+CDA document retrieve - ??Contact : Ashique, Julnishar, Aman, Rehman(Lean)
+
+
+Current Use Case :
+
+Cerner - 2018.01.07 , Millenium
+Oracle DB Version - ???? May be 11
+
+
+
+Cerner Integration Engine : Comm Server
+
+Rhapsody is used as the integration middleware between all the healthcare systems in the Hospital
+
+2 Rhapsody - Internal & External Rhapsody (DMZ)
+
+External - Ayenati , Sehhatek, NPHIES
+
+
+
+
+Current Status of NPHIES Integration :
+
+Current Integration Pathway ----    Cerner --> Rhapsody --> NPHIES
+
+Completed Use Cases :  @Ahique
+
+Cerner to PSMMC rhapsody as HL7
+HL7 to IHE translation happens in Rhapsody
+PSMMC rhapsody to NPHIES as XDS
+____________________
+ADT - Completed
+ORM/OUR - Completed
+FHIR Prescription - Completed
+FHIR Dispense - Completed
+____________________
+
+Clinical Documents -- WIP
+Lab Orders -- Completed
+Lab Reports -- Completed
+Rad Orders -- Completed
+Rad Reports -- Completed
+Rad Image Manifest  -- ??
+CDA document request -- ??
 CDA document retrieve - ??
-
-
-
-

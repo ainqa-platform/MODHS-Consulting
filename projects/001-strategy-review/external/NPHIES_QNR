@@ -1,2 +1,9 @@
 There is possibility, we should be able to proceed with testing and create a conformance.
 When we have smile CDR active in the environment we should be able to implement.
+
+Rehman From lean is responsible for the NPHIES integration in PSMMC, he can help us getting the QNR tested with non production environment and we can proceed with production pull once the SMILE deployment is completed.
+
+
+NPHIES QNR - ITI-18 and ITI-43
+
+Retival of MODHS patient data from NPHIES clincal CDR

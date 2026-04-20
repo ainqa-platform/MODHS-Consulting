@@ -1,0 +1,27 @@
+Contact - Primary Mujeeb, 
+Contact - Hannan, Owais
+
+Tech Stack
+
+Oracle 12 C DB - DB
+Middleware. - .net framework - inhouse developed
+HL7 Messages from Cerner posted to Oracle12C DB using rhapsody DB connector
+
+No middleware, no clinical portal
+
+Simple skeleton with Rhapsody and Oracle DB only with HL7 v2.7 Support
+
+Connected systems
+
+	- Cerner PSMMC instance
+	- Sick Leave
+	- Theater management system
+	- Watcher System - Inpatient
+	- Sehhatek Clinical data
+	- Diabetic Registry
+	- Controlled Drugs
+    - (More Application to be added)
+
+Database Schema
+
+All application have own schema structure 
