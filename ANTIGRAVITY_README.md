@@ -30,5 +30,17 @@ This document tracks the Enterprise Architecture governance activities and workf
 - **Action:** Created the structural placeholders for the specific Strategy Review project.
 - **Explanation:** Created the `projects/001-strategy-review/` directory, along with a `README.md` and an `external/README.md` to house the upcoming artifacts and specific external inputs for this project.
 
+### 6. Project Planning (`$arckit-plan`)
+- **Action:** Generated the initial and revised project plans.
+- **Explanation:** Created `ARC-001-PLAN-v1.0.md` and `ARC-001-PLAN-v1.1.md` in `projects/001-strategy-review/` to outline the phases for the "Integration Strategy & SMILE CDR Migration" project.
+
+### 7. Requirements Generation (`$arckit-requirements`)
+- **Action:** Created business and technical requirements documentation.
+- **Explanation:** Generated `ARC-001-REQ-v1.0.md` capturing the detailed requirements necessary to guide the Mawid and NPHIES integrations via Rhapsody and SMILE CDR deployment.
+
+### 8. Data Modeling (`$arckit-data-model`)
+- **Action:** Generated the project data models.
+- **Explanation:** Created `ARC-001-DATA-v1.0.md` detailing the data architecture, entity relationships, and governance structures required for the integrations.
+
 ---
 *This log will be updated as further ArcKit commands are executed.*
