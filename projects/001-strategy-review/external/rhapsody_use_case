@@ -1,0 +1,34 @@
+Contact : Ashique
+
+Rhapsody External
+
+
+Current Use Case : 
+	1. Mawid (CAS)(Sehhatek) - Integration
+	2. NPHIES R2 - Clinical 
+Ayenati
+
+---------------------------------
+
+Contact : Ashique
+
+Rhapsody Internal
+
+
+Current Use Case : 
+	1. NPHIES ( cerner as HL7 V2.3 and sent to Extrnal Rhapsody)
+	2. NPHIES Clinical notes as CCD from Cerner
+	3. Pyxis - inpatient pharmacy
+	4. Pharmaflow(ROWA) - outpatient pharmacy
+	5. Omnicel - Robatic inpatient pharmacy
+	6. Carestream R4 - Rental implant
+	7. GE RIS/PACS - Rad Orders 
+	8. PowerScribe - Digital Dictation for Radiology to Cerner
+	9. Endosoft - Endoscopy 
+	10. Ascend for Cardiology - CVIS
+	11. 4C gate - queueing system
+	12. SEDCO - Queueing system
+	13. NIC - Yaqeen
+	14. Medinfo - BloodBank
+	15. GE View Point - Order and Reports
+Cathlab - Philips - ADT
