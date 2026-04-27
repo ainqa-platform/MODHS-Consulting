@@ -111,6 +111,10 @@ $arckit-customize all            # Copy all templates
 | 2026-04-27 | Design Review | ARC-001-HLDR-v1.0 | HLD Review completed; APPROVED WITH CONDITIONS (DR & Data Quality) |
 | 2026-04-27 | Governance | ARC-001-STKE-v1.0 | Analyzed stakeholder drivers and goals; established RACI matrix |
 | 2026-04-27 | Risk Management | ARC-001-RISK-v1.0 | Initial risk register created; 1 Critical and 2 High risks identified |
+| 2026-04-27 | Strategy | ARC-001-ROAD-v1.0 | 3-year strategic roadmap (2026-2028) created for clinical consolidation |
+| 2026-04-27 | Business Case | ARC-001-SOBC-v1.0 | Strategic Outline Business Case created; Recommended Option 2 (Balanced) |
+| 2026-04-27 | Delivery Planning | ARC-001-BKLG-v1.0 | Product backlog generated (42 stories/tasks) with 8-sprint plan |
+| 2026-04-27 | Stakeholder Comms | ARC-001-PRES-v1.0 | Executive briefing deck (12 slides) created for Steering Committee |
 
 ## Next Steps
 
