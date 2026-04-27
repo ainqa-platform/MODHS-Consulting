@@ -1,14 +1,11 @@
-Contact : Julnishar, Aman
-
-
 Current Use Case : 
 
 Current Status of Mawid Integration :
 
-Current Integration Pathway ----    Cerner --> Rhapsody --> Mawid (Lean) MOD Specific - https://eatizazhealth.lean.sa/
+Current Integration Pathway ----    Cerner --> Rhapsody --> Mawid (Lean) MOD Specific - https://eatizazhealth.lean.sa/ - Sehhatek Mobile App
 
-Cerner to/fro Rhapsody - HL7
-Rhapsody to/fro - FHIR R4 KSA
+Cerner to and fromRhapsody - HL7
+Rhapsody to and from - FHIR R4 KSA
 
 Use Cases : 
 
@@ -20,3 +17,14 @@ Use Cases :
 	6. Appointment Update - Action - Cancel, reschedule
 	7. Notification - Action - User change / update
 
+Patient Profile - ???? Reason Demographics - There is no 
+Medication Prescription & Medical Dispense 
+
+Error use case
+	1. Booking notification - user notification - Rhapsody queue - Patient Profile Sync issue.
+If a patient books particular slot, which is on Rhapsody queue, another patient booking the same slot from Mawid creating duplicate booking, this should be reported as Bug and Mawid team should handle it, even if there is no conformation coming from Cerner
+	
+
+	2. Specialized Clinic. - For the specialty clinics, sub-specialty not handled in the Mawid - Should be opened to Mawid team as feature request.
+	3. MODHS - User Policy - As Mawid supposed to be used as the central and single source of truth for the MODHS, another other manual booking through given HIS/RIS/CVIS or any other appointment system should be blokced and only mawid should be used for any form of booking.
+	4. Walkin Use Case - Walking use case not implemented in the Mawid - Should be opened to Mawid team as feature Request.

@@ -1,33 +1,17 @@
-Contact : Ashique, Julnishar, Aman, Rehman(Lean)
 
-
-Current Use Case :
-
-Cerner - 2018.01.07 , Millenium
-Oracle DB Version - ???? May be 11
-
-
-
-Cerner Integration Engine : Comm Server
-
-Rhapsody is used as the integration middleware between all the healthcare systems in the Hospital
-
-2 Rhapsody - Internal & External Rhapsody (DMZ)
-
-External - Ayenati , Sehhatek, NPHIES
-
-
-
+Contact Person : @Ashique
 
 Current Status of NPHIES Integration :
 
-Current Integration Pathway ----    Cerner --> Rhapsody --> NPHIES
+Current Integration Pathway ----    Cerner --> Rhapsody(internal & External) --> NPHIES
 
-Completed Use Cases :  @Ahique
+Completed Use Cases :  
 
-Cerner to PSMMC rhapsody as HL7
-HL7 to IHE translation happens in Rhapsody
-PSMMC rhapsody to NPHIES as XDS
+Cerner to PSMMC internal rhapsody as HL7
+HL7 to IHE translation happens in internal Rhapsody
+PSMMC external rhapsody to NPHIES as XDS
+
+Current NPHIES use case completed
 ____________________
 ADT - Completed
 ORM/OUR - Completed
@@ -35,55 +19,11 @@ FHIR Prescription - Completed
 FHIR Dispense - Completed
 ____________________
 
-Clinical Documents -- WIP
+Clinical Documents -- Work in Progress pending with Cerner team for generating the 
 Lab Orders -- Completed
 Lab Reports -- Completed
 Rad Orders -- Completed
 Rad Reports -- Completed
-Rad Image Manifest  -- ??
-CDA document request -- ??
-CDA document retrieve - ??Contact : Ashique, Julnishar, Aman, Rehman(Lean)
-
-
-Current Use Case :
-
-Cerner - 2018.01.07 , Millenium
-Oracle DB Version - ???? May be 11
-
-
-
-Cerner Integration Engine : Comm Server
-
-Rhapsody is used as the integration middleware between all the healthcare systems in the Hospital
-
-2 Rhapsody - Internal & External Rhapsody (DMZ)
-
-External - Ayenati , Sehhatek, NPHIES
-
-
-
-
-Current Status of NPHIES Integration :
-
-Current Integration Pathway ----    Cerner --> Rhapsody --> NPHIES
-
-Completed Use Cases :  @Ahique
-
-Cerner to PSMMC rhapsody as HL7
-HL7 to IHE translation happens in Rhapsody
-PSMMC rhapsody to NPHIES as XDS
-____________________
-ADT - Completed
-ORM/OUR - Completed
-FHIR Prescription - Completed
-FHIR Dispense - Completed
-____________________
-
-Clinical Documents -- WIP
-Lab Orders -- Completed
-Lab Reports -- Completed
-Rad Orders -- Completed
-Rad Reports -- Completed
-Rad Image Manifest  -- ??
-CDA document request -- ??
-CDA document retrieve - ??
+Rad Image Manifest  -- Not completed - VNA pre-request 
+CDA document request -- ready but not implemented
+CDA document retrieve -- ready but not implemented

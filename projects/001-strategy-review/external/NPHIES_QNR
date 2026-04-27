@@ -1,3 +1,6 @@
+
+Contact Person - Rehman - From Lean - suppporting onboarding of PSMMC with NPHIES.
+
 There is possibility, we should be able to proceed with testing and create a conformance.
 When we have smile CDR active in the environment we should be able to implement.
 
@@ -6,4 +9,7 @@ Rehman From lean is responsible for the NPHIES integration in PSMMC, he can help
 
 NPHIES QNR - ITI-18 and ITI-43
 
-Retival of MODHS patient data from NPHIES clincal CDR
+
+Data can be retrieved  - You need to find the place holder to store that data.
+Currently with Cerner millennium you need to check the capability - 
+Or once we have the smile CDR ready we can store that data.
