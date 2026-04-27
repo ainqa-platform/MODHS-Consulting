@@ -73,11 +73,11 @@ MODHS-Consulting/
 ├── .agents/skills/          # Codex skills (auto-discovered)
 ├── projects/
 │   ├── 000-global/
-│   │   └── ARC-000-PRIN-v1.0.md (global principles)
-│   └── 001-project-name/
-│       ├── requirements.md
-│       ├── sow.md
-│       └── vendors/
+│   │   └── ARC-000-PRIN-v1.1.md (global principles)
+│   └── 001-strategy-review/
+│       ├── ARC-001-PLAN-v1.1.md
+│       ├── ARC-001-REQ-v1.1.md
+│       └── diagrams/
 ```
 
 ## Template Customization
@@ -95,11 +95,24 @@ $arckit-customize requirements   # Copy requirements template
 $arckit-customize all            # Copy all templates
 ```
 
+## Execution Log
+
+| Date | Action | Artifact | Description |
+|------|--------|----------|-------------|
+| 2026-04-18 | Initialized | - | ArcKit initialization and onboarding |
+| 2026-04-19 | Project Planning | ARC-001-PLAN-v1.1 | Created project plan for Integration Strategy & SMILE CDR Migration |
+| 2026-04-20 | Requirements | ARC-001-REQ-v1.1 | Defined business and technical requirements for Project 001 |
+| 2026-04-20 | Principles | ARC-000-PRIN-v1.0 | Initial draft of enterprise architecture principles |
+| 2026-04-27 | Principles | ARC-000-PRIN-v1.1 | Expanded principles to full template; added FHIR, PDPL, and operational details |
+| 2026-04-27 | Requirements | ARC-001-REQ-v1.2 | Updated requirements to align with v1.1 principles and include MDM/NHIC scope |
+| 2026-04-27 | Project Planning | ARC-001-PLAN-v1.2 | Updated plan to include MDM/EMPI, NHIC integration, and multi-system migration |
+| 2026-04-27 | Architecture Design | ARC-001-DIAG-003/006 | Generated C4 Context, Container, Data Flow, and Deployment diagrams (v1.2 scope) |
+
 ## Next Steps
 
-1. Start your AI assistant (OpenAI Codex CLI)
-2. Run `$arckit-principles` to establish architecture governance
-3. Create your first project with `$arckit-requirements`
+1. Run `$arckit-stakeholders` to analyze stakeholder drivers and goals
+2. Begin technical research for SMILE CDR deployment with `$arckit-research`
+3. Generate architecture diagrams with `$arckit-diagram`
 
 ## Documentation
 
