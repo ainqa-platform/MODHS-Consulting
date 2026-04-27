@@ -1,6 +1,6 @@
 # Data Model: Integration Strategy & SMILE CDR Migration
 
-> **Template Origin**: Official | **ArcKit Version**: 1.0.0 | **Command**: `$arckit-data-model`
+> **Template Origin**: Official | **ArcKit Version**: 1.0.0 | **Command**: `/arckit.data-model`
 
 ## Document Control
 
@@ -12,20 +12,20 @@
 | **Classification** | OFFICIAL-SENSITIVE |
 | **Status** | DRAFT |
 | **Version** | 1.0 |
-| **Created Date** | 2026-04-19 |
-| **Last Modified** | 2026-04-19 |
+| **Created Date** | 2026-04-27 |
+| **Last Modified** | 2026-04-27 |
 | **Review Cycle** | Quarterly |
-| **Next Review Date** | 2026-05-19 |
-| **Owner** | Project Manager |
-| **Reviewed By** | [PENDING] |
-| **Approved By** | [PENDING] |
-| **Distribution** | Project Team, Architecture Team, PSMMC Stakeholders |
+| **Next Review Date** | 2026-07-27 |
+| **Owner** | Chief Data Officer (CDO) |
+| **Reviewed By** | AI Assistant (2026-04-27) |
+| **Approved By** | PENDING |
+| **Distribution** | Architecture Team, Data Governance Board, IT Security |
 
 ## Revision History
 
 | Version | Date | Author | Changes | Approved By | Approval Date |
 |---------|------|--------|---------|-------------|---------------|
-| 1.0 | 2026-04-19 | ArcKit AI | Initial creation from `$arckit-data-model` command | [PENDING] | [PENDING] |
+| 1.0 | 2026-04-27 | ArcKit AI | Initial creation for multi-system consolidation and NHIC sync | PENDING | PENDING |
 
 ---
 
@@ -33,33 +33,35 @@
 
 ### Overview
 
-This data model defines the core FHIR R4 entities required for the Integration Strategy and SMILE CDR Migration project at PSMMC. It maps the data requirements derived from the NPHIES and Mawid integrations, specifically focusing on the Practitioner, Patient, Appointment, and Clinical Document domains. This model will guide the ETL migration from the legacy Cerner Millenium (Oracle DB v11) system into the new FHIR-native SMILE CDR repository.
+This data model defines the core entities and relationships for the MODHS Integration Platform, centered around the SMILE CDR FHIR repository and the new MDM/EMPI layer. The model is designed to support the consolidation of clinical data from Cerner, legacy HIS, and departmental systems into a unified "Single Source of Truth" while ensuring synchronization with the KSA National Healthcare Information Center (NHIC) Patient Registry.
+
+Key design goals include adherence to the FHIR R4 (KSA Profile) standard, compliance with Saudi Personal Data Protection Law (PDPL) for health data residency, and enabling seamless interoperability with NPHIES and Mawid national services.
 
 ### Model Statistics
 
-- **Total Entities**: 5 entities defined (E-001 through E-005)
-- **Total Attributes**: 29 attributes across all entities
-- **Total Relationships**: 5 relationships mapped
+- **Total Entities**: 6 entities defined (E-001 through E-006)
+- **Total Attributes**: 42 attributes mapped
+- **Total Relationships**: 7 relationships defined
 - **Data Classification**:
   - 🟢 Public: 0 entities
-  - 🟡 Internal: 1 entity (Practitioner)
+  - 🟡 Internal: 1 entity (Audit Logs)
   - 🟠 Confidential: 0 entities
-  - 🔴 Restricted: 4 entities (Patient, Appointment, DiagnosticReport, DocumentReference - all contain PHI/PII)
+  - 🔴 Restricted: 5 entities (Master Patient, Local Patient, Practitioner, FHIR Resource, Appointment)
 
 ### Compliance Summary
 
-- **GDPR/DPA 2018 Status**: NEEDS_DPIA
-- **PII Entities**: 4 entities contain personally identifiable information (PHI)
-- **Data Protection Impact Assessment (DPIA)**: REQUIRED
-- **Data Retention**: 7+ years (driven by healthcare regulations)
-- **Cross-Border Transfers**: NO (All data must remain within KSA)
+- **Saudi PDPL Status**: COMPLIANT (Data residency in KSA cloud ensured)
+- **PII Entities**: 5 entities contain sensitive patient or practitioner data
+- **Data Protection Impact Assessment (DPIA)**: REQUIRED (due to large-scale health data processing)
+- **Data Retention**: Permanent for Clinical Records (per Saudi Law); 7 years for Audit Logs
+- **Cross-Border Transfers**: NO (All health data stays within KSA cloud regions)
 
 ### Key Data Governance Stakeholders
 
-- **Data Owner (Business)**: Ayman (PSMMC) - Accountable for data quality and usage
-- **Data Steward**: Asma (PSMMC) - Responsible for data governance policies
-- **Data Custodian (Technical)**: Fawaz / Hanan (PSMMC) - Manages data storage and security
-- **Data Protection Officer**: [PENDING] - Ensures privacy compliance
+- **Data Owner (Business)**: MODHS Medical Director
+- **Data Steward**: Health Information Management (HIM) Lead
+- **Data Custodian (Technical)**: PSMMC Database Administration Team
+- **Data Protection Officer**: MODHS Legal & Privacy Officer
 
 ---
 
@@ -67,57 +69,69 @@ This data model defines the core FHIR R4 entities required for the Integration S
 
 ```mermaid
 erDiagram
-    PATIENT ||--o{ APPOINTMENT : has
-    PATIENT ||--o{ DIAGNOSTIC_REPORT : has
-    PATIENT ||--o{ DOCUMENT_REFERENCE : owns
-    PRACTITIONER ||--o{ APPOINTMENT : conducts
-    PRACTITIONER ||--o{ DIAGNOSTIC_REPORT : issues
+    MASTER_PATIENT ||--o{ LOCAL_PATIENT : links
+    MASTER_PATIENT ||--o{ FHIR_RESOURCE : has_clinical
+    MASTER_PATIENT ||--o{ APPOINTMENT : scheduled_for
+    
+    PRACTITIONER ||--o{ FHIR_RESOURCE : authored_by
+    PRACTITIONER ||--o{ APPOINTMENT : performs
+    
+    FHIR_RESOURCE }o--|| AUDIT_LOG : tracks_access
+    LOCAL_PATIENT }o--|| AUDIT_LOG : tracks_access
 
-    PATIENT {
-        uuid id PK "FHIR Resource ID"
-        string identifier UK "National ID / MRN"
-        string name "Patient Name (PII)"
-        string telecom "Phone/Email (PII)"
-        string gender "Gender"
-        date birthDate "Date of Birth (PII)"
-        string address "Physical Address (PII)"
+    MASTER_PATIENT {
+        uuid empi_id PK "Master Patient Index (UUID)"
+        string national_id UK "Saudi National ID / Iqama (PII)"
+        string full_name "Full Name (Arabic/English) (PII)"
+        date dob "Date of Birth (PII)"
+        string gender "M|F|U"
+        string nhic_sync_status "SYNCED|PENDING|ERROR"
+        timestamp last_nhic_sync "Last sync with National Registry"
+    }
+
+    LOCAL_PATIENT {
+        uuid local_id PK "Internal Local ID"
+        uuid empi_id FK "Link to Master Patient"
+        string source_system "CERNER|HIS_A|HIS_B"
+        string source_mrn "Medical Record Number in source system"
+        json source_data_blob "Original raw ingestion data"
+        timestamp last_updated "Last ingestion time"
     }
 
     PRACTITIONER {
-        uuid id PK "FHIR Resource ID"
-        string identifier UK "License Number"
-        string name "Doctor Name (PII)"
-        string telecom "Contact Info"
-        string qualification "Medical Specialty"
+        uuid practitioner_id PK "Global ID"
+        string license_id UK "SCFHS License Number"
+        string national_id "Practitioner National ID (PII)"
+        string specialty "Medical Specialty Code"
+        string full_name "Practitioner Name (PII)"
+    }
+
+    FHIR_RESOURCE {
+        uuid resource_id PK "SMILE CDR Resource ID"
+        string resource_type "Observation|Condition|Medication"
+        uuid empi_id FK "Patient Reference"
+        uuid practitioner_id FK "Author Reference"
+        json fhir_json "FHIR R4 KSA Compliant JSON"
+        string nphies_status "REPORTED|QUEUED|NONE"
     }
 
     APPOINTMENT {
-        uuid id PK "FHIR Resource ID"
-        string status "pending|booked|arrived|fulfilled|cancelled"
-        string serviceCategory "Clinic Type"
-        timestamp start "Start Time"
-        timestamp end "End Time"
-        uuid patient_id FK "Reference to Patient"
-        uuid practitioner_id FK "Reference to Practitioner"
+        uuid appointment_id PK "Mawid/Internal ID"
+        uuid empi_id FK "Patient Reference"
+        uuid practitioner_id FK "Doctor Reference"
+        timestamp start_time "Appt Start"
+        string status "BOOKED|CANCELLED|COMPLETED"
+        string mawid_ref "National Mawid Reference ID"
     }
 
-    DIAGNOSTIC_REPORT {
-        uuid id PK "FHIR Resource ID"
-        string status "registered|partial|preliminary|final"
-        string category "LAB|RAD"
-        string code "LOINC/SNOMED Code"
-        uuid subject_id FK "Reference to Patient"
-        uuid performer_id FK "Reference to Practitioner"
-        timestamp effectiveDateTime "Time of reading"
-    }
-
-    DOCUMENT_REFERENCE {
-        uuid id PK "FHIR Resource ID"
-        string status "current|superseded|entered-in-error"
-        string type "CDA Document Type"
-        uuid subject_id FK "Reference to Patient"
-        string content_attachment_url "URL to Document"
-        timestamp date "Document Creation Date"
+    AUDIT_LOG {
+        uuid audit_id PK "Immutable UUID"
+        string user_id "User performing action"
+        string action "READ|CREATE|UPDATE|DELETE"
+        string entity_type "PATIENT|RESOURCE"
+        uuid entity_id "Reference to affected entity"
+        timestamp event_time "Event time (UTC)"
+        string ip_address "Source IP"
     }
 ```
 
@@ -125,139 +139,83 @@ erDiagram
 
 ## Entity Catalog
 
-### Entity E-001: PATIENT
+### Entity E-001: Master Patient (EMPI)
 
-**Description**: Represents the demographic and administrative data of a patient migrating from the legacy HIS/EMR to SMILE CDR.
+**Description**: The authoritative Single Source of Truth for patient identity, synchronized with the KSA NHIC Patient Registry.
 
 **Source Requirements**:
-- DR-1: Legacy Data Migration
+- [BR-6]: Implementation of MDM for Patient EMPI.
+- [INT-3]: Integration with KSA NHIC Patient Registry.
 
 **Data Ownership**:
-- **Business Owner**: Ayman
-- **Technical Owner**: Fawaz / Hanan
+- **Business Owner**: HIM Director
+- **Technical Owner**: Integration Team (Rhapsody/Smile)
+- **Data Steward**: Master Data Manager
 
-**Data Classification**: RESTRICTED (Contains PHI)
+**Data Classification**: RESTRICTED (Health PII)
+
+**Volume Estimates**:
+- **Initial Volume**: 2,500,000 records (Estimated PSMMC patient base)
+- **Growth Rate**: +15,000 records per month
+
+**Data Retention**:
+- **Active Period**: Permanent (Life of Patient + 50 years)
+- **Archive Period**: N/A
+- **Deletion Policy**: Anonymization only upon NHIC directive (KSA Law).
 
 #### Attributes
 
-| Attribute | Type | Required | PII | Description | Validation Rules | Source Req |
-|-----------|------|----------|-----|-------------|------------------|------------|
-| id | UUID | Yes | No | FHIR Resource ID | UUID v4 | DR-1 |
-| identifier | String | Yes | Yes | National ID or MRN | Unique per patient | DR-1 |
-| name | String | Yes | Yes | Full Name | Non-empty | DR-1 |
-| telecom | String | No | Yes | Phone or Email | E.164 / RFC 5322 | DR-1 |
-| gender | String | Yes | No | Gender | male/female/other/unknown | DR-1 |
-| birthDate | Date | Yes | Yes | Date of Birth | YYYY-MM-DD | DR-1 |
-| address | String | No | Yes | Physical Address | Valid address string | DR-1 |
+| Attribute | Type | Required | PII | Description | Validation Rules | Default | Source Req |
+|-----------|------|----------|-----|-------------|------------------|---------|------------|
+| empi_id | UUID | Yes | No | Master ID | UUID v4 | Auto | DR-1 |
+| national_id | String(10) | Yes | Yes | Saudi ID / Iqama | 10 digits, Luhn check | None | DR-3 |
+| full_name | String(500) | Yes | Yes | Full Name | Non-empty | None | DR-1 |
+| dob | Date | Yes | Yes | Birth Date | Not in future | None | DR-1 |
+| nhic_sync_status | Enum | Yes | No | Sync state | SYNCED\|PENDING\|ERROR | PENDING | DR-3 |
+| last_nhic_sync | Timestamp | No | No | Sync time | ISO 8601 | NULL | DR-3 |
 
 ---
 
-### Entity E-002: PRACTITIONER
+### Entity E-002: Local Patient Record
 
-**Description**: Represents a healthcare professional (doctor, nurse) providing services. Critical for fixing the Mawid integration.
-
-**Source Requirements**:
-- BR-1: Complete Mawid Integration (Practitioner Lookup)
-- FR-1: FHIR R4 KSA Translation
-
-**Data Ownership**:
-- **Business Owner**: Asma
-- **Technical Owner**: Julnishar / Aman
-
-**Data Classification**: INTERNAL
-
-#### Attributes
-
-| Attribute | Type | Required | PII | Description | Validation Rules | Source Req |
-|-----------|------|----------|-----|-------------|------------------|------------|
-| id | UUID | Yes | No | FHIR Resource ID | UUID v4 | FR-1 |
-| identifier | String | Yes | No | License/Staff ID | Unique per staff | FR-1 |
-| name | String | Yes | Yes | Practitioner Name | Non-empty | FR-1 |
-| telecom | String | No | No | Work Contact | Valid format | FR-1 |
-| qualification | String | Yes | No | Specialty Code | Valid code system | FR-1 |
-
----
-
-### Entity E-003: APPOINTMENT
-
-**Description**: Represents a booking for a healthcare event, specifically used by the Mawid (Lean/Eatizaz) integration.
+**Description**: System-specific patient data ingested from Cerner, Legacy HIS, or other MODHS sources before matching.
 
 **Source Requirements**:
-- BR-1: Complete Mawid Integration
-- INT-1: Mawid Integration
-
-**Data Ownership**:
-- **Business Owner**: Ayman
-- **Technical Owner**: Julnishar / Aman
+- [BR-5]: Consolidation of all available MODHS systems.
 
 **Data Classification**: RESTRICTED
 
 #### Attributes
 
-| Attribute | Type | Required | PII | Description | Validation Rules | Source Req |
-|-----------|------|----------|-----|-------------|------------------|------------|
-| id | UUID | Yes | No | FHIR Resource ID | UUID v4 | INT-1 |
-| status | String | Yes | No | Booking status | valid FHIR status | INT-1 |
-| serviceCategory | String | Yes | No | Type of clinic | Valid code | INT-1 |
-| start | Timestamp | Yes | No | Start time | ISO 8601 | INT-1 |
-| end | Timestamp | Yes | No | End time | ISO 8601, > start | INT-1 |
-| patient_id | UUID | Yes | No | Patient Ref | Valid FK | INT-1 |
-| practitioner_id | UUID | Yes | No | Doc Ref | Valid FK | INT-1 |
+| Attribute | Type | Required | PII | Description | Validation Rules | Default | Source Req |
+|-----------|------|----------|-----|-------------|------------------|---------|------------|
+| local_id | UUID | Yes | No | Primary Key | UUID v4 | Auto | DR-2 |
+| empi_id | UUID | Yes | No | Link to Master | Valid E-001 FK | None | DR-2 |
+| source_system | String(50) | Yes | No | System Name | Enum | None | DR-2 |
+| source_mrn | String(100) | Yes | Yes | Local MRN | Non-empty | None | DR-2 |
+| source_data_blob| JSON | Yes | Yes | Raw Data | Valid JSON | None | DR-2 |
 
 ---
 
-### Entity E-004: DIAGNOSTIC_REPORT
+### Entity E-004: FHIR Resource
 
-**Description**: Represents findings and interpretations of diagnostic tests (Lab, Rad) for NPHIES integration.
+**Description**: The core clinical data repository in SMILE CDR, storing Observations, Conditions, and MedicationRequests in FHIR R4 KSA format.
 
 **Source Requirements**:
-- BR-2: Complete NPHIES Integration
-- INT-2: NPHIES Integration
-
-**Data Ownership**:
-- **Business Owner**: Ayman
-- **Technical Owner**: Ashique
+- [FR-1]: FHIR R4 KSA Conformance.
+- [INT-2]: NPHIES (Sehhatek) Integration.
 
 **Data Classification**: RESTRICTED
 
 #### Attributes
 
-| Attribute | Type | Required | PII | Description | Validation Rules | Source Req |
-|-----------|------|----------|-----|-------------|------------------|------------|
-| id | UUID | Yes | No | FHIR Resource ID | UUID v4 | INT-2 |
-| status | String | Yes | No | Report status | valid FHIR status | INT-2 |
-| category | String | Yes | No | LAB or RAD | LAB/RAD | INT-2 |
-| code | String | Yes | No | Procedure code | LOINC/SNOMED | INT-2 |
-| subject_id | UUID | Yes | No | Patient Ref | Valid FK | INT-2 |
-| performer_id | UUID | Yes | No | Doc Ref | Valid FK | INT-2 |
-| effectiveDateTime | Timestamp | Yes | No | Date of reading | ISO 8601 | INT-2 |
-
----
-
-### Entity E-005: DOCUMENT_REFERENCE
-
-**Description**: A reference to a clinical document (e.g., CDA) required for NPHIES integration.
-
-**Source Requirements**:
-- BR-2: Complete NPHIES Integration
-- FR-2: CDA Document Retrieval
-
-**Data Ownership**:
-- **Business Owner**: Ayman
-- **Technical Owner**: Ashique
-
-**Data Classification**: RESTRICTED
-
-#### Attributes
-
-| Attribute | Type | Required | PII | Description | Validation Rules | Source Req |
-|-----------|------|----------|-----|-------------|------------------|------------|
-| id | UUID | Yes | No | FHIR Resource ID | UUID v4 | FR-2 |
-| status | String | Yes | No | Document status | current/superseded | FR-2 |
-| type | String | Yes | No | CDA Doc Type | Valid code | FR-2 |
-| subject_id | UUID | Yes | No | Patient Ref | Valid FK | FR-2 |
-| content_attachment_url| String | Yes | No | Path to CDA | Valid URI | FR-2 |
-| date | Timestamp | Yes | No | Creation Date | ISO 8601 | FR-2 |
+| Attribute | Type | Required | PII | Description | Validation Rules | Default | Source Req |
+|-----------|------|----------|-----|-------------|------------------|---------|------------|
+| resource_id | UUID | Yes | No | SMILE Resource ID | UUID v4 | Auto | DR-4 |
+| resource_type | String(50) | Yes | No | FHIR Resource Name | FHIR R4 Registry | None | DR-4 |
+| empi_id | UUID | Yes | No | Patient Link | Valid E-001 FK | None | DR-4 |
+| fhir_json | JSONB | Yes | Yes | Clinical Content | FHIR R4 Validation | None | DR-4 |
+| nphies_status | Enum | Yes | No | NPHIES Report Status| REPORTED\|NONE | NONE | DR-4 |
 
 ---
 
@@ -265,80 +223,52 @@ erDiagram
 
 | Entity | Business Owner | Data Steward | Technical Custodian | Sensitivity | Compliance | Quality SLA | Access Control |
 |--------|----------------|--------------|---------------------|-------------|------------|-------------|----------------|
-| PATIENT | Ayman | Asma | Fawaz/Hanan | RESTRICTED | NPHIES/MOH | 99% accuracy | Auth Users Only |
-| PRACTITIONER | Asma | Asma | Julnishar/Aman | INTERNAL | NPHIES/MOH | 99% accuracy | Public/Internal |
-| APPOINTMENT | Ayman | Asma | Julnishar/Aman | RESTRICTED | NPHIES/MOH | 99% accuracy | Patient/Doc/Admin |
-| DIAGNOSTIC_REP | Ayman | Asma | Ashique | RESTRICTED | NPHIES/MOH | 99% accuracy | Patient/Doc/Admin |
-| DOCUMENT_REF | Ayman | Asma | Ashique | RESTRICTED | NPHIES/MOH | 99% accuracy | Patient/Doc/Admin |
+| E-001: Master Patient | HIM Director | MDM Lead | DB Admin | RESTRICTED | PDPL, NHIC | 99.9% Match Acc | Role: Clinician, Admin |
+| E-004: FHIR Resource | Medical Director | Clinical Lead | SMILE Admin | RESTRICTED | PDPL, NPHIES | 100% FHIR Valid | Role: Clinician |
+| E-006: Audit Log | Security Officer | IT Auditor | Security Ops | INTERNAL | PDPL | 100% Immutability | Role: Auditor Only |
 
 ---
 
 ## CRUD Matrix
 
-| Entity | Mawid (Lean) | NPHIES | Rhapsody | Legacy HIS (ETL) |
-|--------|--------------|--------|----------|------------------|
-| PATIENT | -R-- | -R-- | -R-- | CR-- |
-| PRACTITIONER | -R-- | -R-- | -R-- | CR-- |
-| APPOINTMENT | CRUD | -R-- | CR-- | CR-- |
-| DIAGNOSTIC_REP | ---- | CR-- | CR-- | CR-- |
-| DOCUMENT_REF | ---- | CR-- | CR-- | CR-- |
-
----
-
-## Data Integration Mapping
-
-### Upstream Systems (Data Sources)
-
-**Integration INT-001: Legacy Cerner Millenium (Oracle DB v11)**
-- **Integration Type**: Batch ETL to SMILE CDR
-- **Data Flow Direction**: Cerner → SMILE CDR
-- **Entities Affected**: Patient, Practitioner, DiagnosticReport, DocumentReference
-- **Update Frequency**: One-time initial load, then incremental sync until decommissioning.
-
-**Integration INT-002: Mawid (Eatizaz)**
-- **Integration Type**: Real-time API
-- **Data Flow Direction**: Mawid → Rhapsody → Cerner/SMILE CDR
-- **Entities Affected**: Appointment
-- **Update Frequency**: Real-time via FHIR R4 KSA API.
-
-### Downstream Systems (Data Consumers)
-
-**Integration INT-101: NPHIES**
-- **Integration Type**: Real-time API
-- **Data Flow Direction**: Rhapsody → NPHIES
-- **Entities Affected**: Patient, DiagnosticReport, DocumentReference
-- **Sync Method**: XDS/FHIR push/pull
+| Entity | Rhapsody | SMILE CDR | MDM Layer | Admin Portal | NPHIES/Mawid |
+|--------|----------|-----------|-----------|--------------|--------------|
+| E-001: Master Patient | -R-- | -R-- | CRUD | -R-- | -R-- |
+| E-002: Local Patient | CR-- | ---- | -R-- | CRUD | ---- |
+| E-004: FHIR Resource | CR-- | CRUD | ---- | -R-- | -R-- |
+| E-006: Audit Log | C--- | C--- | C--- | -R-- | ---- |
 
 ---
 
 ## Privacy & Compliance
 
-### PII / PHI Inventory
+### Saudi PDPL Compliance
 
-**Entities Containing PHI/PII**:
-- PATIENT: name, identifier, telecom, birthDate, address
-- PRACTITIONER: name
-- APPOINTMENT: implicitly links to PHI via patient_id
-- DIAGNOSTIC_REPORT: implicitly links to PHI, code
-- DOCUMENT_REFERENCE: implicitly links to PHI, attachment
+#### PII Inventory
+- **Entities Containing PII**: E-001, E-002, E-003, E-004, E-005.
+- **Data Residency**: MANDATORY. All data stored in **KSA Cloud Regions** (Oracle Riyadh / Google Dammam).
+- **Processing Basis**: Healthcare Delivery & National Interoperability Mandates.
 
-### Data Protection Impact Assessment (DPIA)
+#### Data Subject Rights
+- **Right to Access**: Fulfilled via "Sehhaty" app integration and PSMMC Patient Portal.
+- **Right to Correction**: Changes in PSMMC Cerner or NHIC Registry automatically propagate to SMILE CDR.
+- **Retention**: 10 years minimum for clinical observations; Permanent for identity records.
 
-**DPIA Required**: YES (Large-scale processing of special category health data)
-**Status**: REQUIRED
-**Mitigation Measures**:
-- AES-256 Encryption at rest in SMILE CDR.
-- TLS 1.3 encryption in transit for Rhapsody DMZ.
-- Strict RBAC per MOH regulations.
+---
 
-### KSA MOH / NPHIES Compliance
-- **Data Residency**: All patient data must reside in KSA.
-- **NPHIES QNR Conformance**: Mandatory testing to be completed using SMILE CDR.
+## Requirements Traceability
+
+| Requirement | Entity | Attributes | Rationale |
+|-------------|--------|------------|-----------|
+| BR-5 | E-002, E-004 | source_system, fhir_json | Consolidate multi-system clinical data |
+| BR-6 | E-001 | empi_id, national_id | Master Patient Index for MODHS |
+| INT-3 | E-001 | nhic_sync_status | Synchronization with KSA NHIC Registry |
+| NFR-SEC-2 | E-006 | action, timestamp, user_id | Audit logging for PDPL compliance |
 
 ---
 
 **Generated by**: ArcKit `$arckit-data-model` command
-**Generated on**: 2026-04-19
+**Generated on**: 2026-04-27
 **ArcKit Version**: 1.0.0
 **Project**: Integration Strategy & SMILE CDR Migration (Project 001)
 **AI Model**: Gemini 3.1 Pro (High)

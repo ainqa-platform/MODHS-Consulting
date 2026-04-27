@@ -107,6 +107,10 @@ $arckit-customize all            # Copy all templates
 | 2026-04-27 | Requirements | ARC-001-REQ-v1.2 | Updated requirements to align with v1.1 principles and include MDM/NHIC scope |
 | 2026-04-27 | Project Planning | ARC-001-PLAN-v1.2 | Updated plan to include MDM/EMPI, NHIC integration, and multi-system migration |
 | 2026-04-27 | Architecture Design | ARC-001-DIAG-003/006 | Generated C4 Context, Container, Data Flow, and Deployment diagrams (v1.2 scope) |
+| 2026-04-27 | Data Architecture | ARC-001-DATA-v1.0 | Created comprehensive data model with EMPI, NHIC sync, and FHIR R4 mapping |
+| 2026-04-27 | Design Review | ARC-001-HLDR-v1.0 | HLD Review completed; APPROVED WITH CONDITIONS (DR & Data Quality) |
+| 2026-04-27 | Governance | ARC-001-STKE-v1.0 | Analyzed stakeholder drivers and goals; established RACI matrix |
+| 2026-04-27 | Risk Management | ARC-001-RISK-v1.0 | Initial risk register created; 1 Critical and 2 High risks identified |
 
 ## Next Steps
 
