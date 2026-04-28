@@ -115,6 +115,7 @@ $arckit-customize all            # Copy all templates
 | 2026-04-27 | Business Case | ARC-001-SOBC-v1.0 | Strategic Outline Business Case created; Recommended Option 2 (Balanced) |
 | 2026-04-27 | Delivery Planning | ARC-001-BKLG-v1.0 | Product backlog generated (42 stories/tasks) with 8-sprint plan |
 | 2026-04-27 | Stakeholder Comms | ARC-001-PRES-v1.0 | Executive briefing deck (12 slides) created for Steering Committee |
+| 2026-04-28 | Governance | ARC-001-STORY-v1.0 | Project governance story generated with full timeline and traceability analysis |
 
 ## Next Steps
 
